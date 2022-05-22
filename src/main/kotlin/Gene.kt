@@ -7,11 +7,11 @@ class Gene(val gene: UInt) {
 
     companion object {
         fun randomGene(): Gene {
-            val source: UInt = Random.nextInt().toUInt() and 1.toUInt() shl 31
-            val sourceID: UInt = Random.nextInt().toUInt() and 0x7FFF.toUInt() shl 24
-            val sink: UInt = Random.nextInt().toUInt() and 1.toUInt() shl 23
-            val sinkID: UInt = Random.nextInt().toUInt() and 0x7FFF.toUInt() shl 16
-            val weight: UInt = (Random.nextInt(0,0xFFFF) - 0x8000).toUInt()
+            val source: UInt = Random.nextInt(0,10).toUInt() and 1.toUInt() shl 31
+            val sourceID: UInt = Random.nextInt(0,127).toUInt() and 0x7FFF.toUInt() shl 24
+            val sink: UInt = Random.nextInt(0, 10).toUInt() and 1.toUInt() shl 23
+            val sinkID: UInt = Random.nextInt(0, 127).toUInt() and 0x7FFF.toUInt() shl 16
+            val weight: UInt = (Random.nextInt(0,0xFFFF)).toUInt()
             return Gene(source or sourceID or sink or sinkID or weight)
         }
 
@@ -27,6 +27,11 @@ class Gene(val gene: UInt) {
             }
             return builder.reverse().toString()
         }
+
+        fun toHexString(gene: UInt): String {
+            return Integer.toHexString(gene.toInt());
+        }
+
     }
 
     fun sourceInternal(): Boolean {
@@ -45,8 +50,8 @@ class Gene(val gene: UInt) {
         return (gene and 0x007F0000.toUInt() shr 16).toInt()
     }
 
-    fun weight(): Short {
-        return (gene and 0x0000FFFF.toUInt()).toShort()
+    fun weight(): Double {
+        return (gene and 0x0000FFFF.toUInt()).toShort().toDouble() / 8192.0
     }
 
     override fun toString(): String {
