@@ -7,7 +7,7 @@ class World(val maxX: Int, val maxY: Int, val population: Int) {
             while (creatures.containsKey(position)) {
                 position = Position.random(maxX, maxY)
             }
-            creatures[position] = Creature(position)
+            creatures[position] = Creature.randomCreature(position, 2)
         }
     }
 }
