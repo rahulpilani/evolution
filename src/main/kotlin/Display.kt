@@ -4,7 +4,7 @@ import java.awt.Graphics
 import javax.swing.JFrame
 
 class Display(title: String, private val maxX: Int, private val maxY: Int, population: Int) : JFrame() {
-    private val grid = Grid(maxY, maxX, population)
+    private val grid = World(maxY, maxX, population)
 
     init {
         createUI(title)
