@@ -1,12 +1,31 @@
 import kotlin.random.Random
 
-class Gene(private val gene: UInt) {
+class Gene(val gene: UInt) {
     /*
     |Source: 1 bit| Source ID: 7 bits | Sink: 1 bit | Sink ID: 7 bits | Weight: 16 bits|
      */
+
     companion object {
         fun randomGene(): Gene {
-            return Gene(Random.nextInt().toUInt())
+            val source: UInt = Random.nextInt().toUInt() and 1.toUInt() shl 31
+            val sourceID: UInt = Random.nextInt().toUInt() and 0x7FFF.toUInt() shl 24
+            val sink: UInt = Random.nextInt().toUInt() and 1.toUInt() shl 23
+            val sinkID: UInt = Random.nextInt().toUInt() and 0x7FFF.toUInt() shl 16
+            val weight: UInt = (Random.nextInt(0,0xFFFF) - 0x8000).toUInt()
+            return Gene(source or sourceID or sink or sinkID or weight)
+        }
+
+        fun toBitString(gene: UInt): String {
+            var mask = 1.toUInt()
+            val builder: StringBuilder = java.lang.StringBuilder()
+            for (i in 0 until 32) {
+                builder.append((gene and mask) shr i)
+                mask = mask shl 1
+                if ((i + 1) % 8 == 0) {
+                    builder.append(" ")
+                }
+            }
+            return builder.reverse().toString()
         }
     }
 
@@ -30,4 +49,15 @@ class Gene(private val gene: UInt) {
         return (gene and 0x0000FFFF.toUInt()).toShort()
     }
 
+    override fun toString(): String {
+        return "" + sourceInternal() + ", " + sourceId() + ", " + sinkInternal() + ", " + sinkId() + ", " + weight()
+    }
+
+
+}
+fun main() {
+    for (i in 0 until 100) {
+        val randomGene = Gene.randomGene()
+        println(Gene.toBitString(randomGene.gene) + " " + randomGene);
+    }
 }

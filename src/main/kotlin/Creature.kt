@@ -12,6 +12,14 @@ class Creature(val position: Position, val genome: Genome) {
         return Creature(position, genome)
     }
 
-    
+    override fun toString(): String {
+        return "" + position + "\n" + genome.toString()
+    }
+}
 
+fun main() {
+    for (i in 0 until 100) {
+        val creature = Creature.randomCreature(Position.random(128, 128), 8)
+        println(creature)
+    }
 }
