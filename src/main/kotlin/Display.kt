@@ -38,6 +38,10 @@ class Display(title: String, private val maxX: Int, private val maxY: Int, popul
         g?.fillOval(xPosition, yPosition, MULT, MULT)
     }
 
+    private fun computeColor(hash: UByte) {
+
+    }
+
     companion object {
         const val X_OFFSET = 7
         const val MULT = 6

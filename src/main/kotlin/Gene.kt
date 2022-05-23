@@ -7,10 +7,10 @@ class Gene(val gene: UInt) {
 
     companion object {
         fun randomGene(): Gene {
-            val source: UInt = Random.nextInt(0,10).toUInt() and 1.toUInt() shl 31
-            val sourceID: UInt = Random.nextInt(0,127).toUInt() and 0x7FFF.toUInt() shl 24
-            val sink: UInt = Random.nextInt(0, 10).toUInt() and 1.toUInt() shl 23
-            val sinkID: UInt = Random.nextInt(0, 127).toUInt() and 0x7FFF.toUInt() shl 16
+            val source: UInt = Random.nextInt(0,2).toUInt() and 1.toUInt() shl 31
+            val sourceID: UInt = Random.nextInt(0,128).toUInt() and 0x7FFF.toUInt() shl 24
+            val sink: UInt = Random.nextInt(0, 2).toUInt() and 1.toUInt() shl 23
+            val sinkID: UInt = Random.nextInt(0, 128).toUInt() and 0x7FFF.toUInt() shl 16
             val weight: UInt = (Random.nextInt(0,0xFFFF)).toUInt()
             return Gene(source or sourceID or sink or sinkID or weight)
         }
@@ -39,7 +39,7 @@ class Gene(val gene: UInt) {
     }
 
     fun sinkInternal(): Boolean {
-        return gene and 0x08000000.toUInt() == 0x08000000.toUInt()
+        return gene and 0x00800000.toUInt() == 0x00800000.toUInt()
     }
 
     fun sourceId(): Int {
