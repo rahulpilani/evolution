@@ -27,15 +27,36 @@ class Display(title: String, private val maxX: Int, private val maxY: Int, popul
         g?.color = Color.BLACK
         g?.drawRect(X_OFFSET, Y_OFFSET, maxX * MULT, maxY * MULT)
         grid.creatures.forEach { entry ->
-            drawCircle(entry.key, g)
+            drawCircle(entry.key, entry.value.genome.hash, g)
         }
     }
 
-    private fun drawCircle(position: Position, g: Graphics?) {
+    private fun drawCircle(position: Position, hash: UByte, g: Graphics?) {
         val xPosition = (position.x * MULT) + X_OFFSET
         val yPosition = (position.y * MULT) + Y_OFFSET
-        g?.color = Color.GREEN
+        val (red, green, blue) = colorFromHash(hash)
+        g?.color = Color(red, green, blue)
+
+
+
         g?.fillOval(xPosition, yPosition, MULT, MULT)
+    }
+
+    private fun colorFromHash(hash: UByte): Triple<Int, Int, Int> {
+        var red = hash.toInt()
+        var green = (hash.toInt() % 31) * 8
+        var blue = ((hash.toInt() % 7) * 32)
+
+        val maxLuma = 176
+        val maxColor = 176
+
+        val luma = ((red * 3) + blue + (green * 4)) / 8
+        if (luma > maxLuma) {
+            if (red > maxColor) red %= maxColor
+            if (green > maxColor) green %= maxColor
+            if (blue > maxColor) blue %= maxColor
+        }
+        return Triple(red, green, blue)
     }
 
     private fun computeColor(hash: UByte) {

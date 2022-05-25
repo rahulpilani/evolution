@@ -13,6 +13,11 @@ class Bitwise {
         fun booleanToBit(flag: Boolean): UInt {
             return if (flag) 1u else 0u
         }
+
+        @OptIn(ExperimentalUnsignedTypes::class)
+        fun orTogether(vararg values: UInt): UInt {
+            return values.asList().foldRight(0x0u) { a, b -> b or a }
+        }
     }
 }
 

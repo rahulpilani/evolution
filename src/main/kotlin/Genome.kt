@@ -1,33 +1,10 @@
 class Genome(val genes: List<Gene>) {
-    val hash: Triple<UByte, UByte, UByte>
+    val hash: UByte
 
     init {
         val gene1 = genes.first()
         val gene2 = genes.last()
-        val hash1 = computeHash(Bitwise::significantBit, 6, gene1, gene2)
-        val hash2 = computeHash(Bitwise::significantBit, 5, gene1, gene2)
-        val hash3 = computeHash(Bitwise::significantBit, 4, gene1, gene2)
-        hash = Triple(hash1, hash2, hash3)
-    }
-
-    private fun computeHash(f: (UInt, Int) -> UInt, bit: Int, gene1: Gene, gene2: Gene): UByte {
-        val message0 = Bitwise.booleanToBit(gene1.sourceInternal())
-        val message1 = Bitwise.booleanToBit(gene2.sourceInternal()) shl 1
-        val message2 = f(gene1.sourceId().toUInt(), bit) shl 2
-        val message3 = f(gene2.sourceId().toUInt(), bit) shl 3
-        val message4 = Bitwise.booleanToBit(gene1.sinkInternal()) shl 4
-        val message5 = Bitwise.booleanToBit(gene2.sinkInternal()) shl 5
-        val message6 = f(gene1.sinkId().toUInt(), bit) shl 6
-        val message7 = f(gene2.sinkId().toUInt(), bit) shl 7
-
-        return (message0 or
-                message1 or
-                message2 or
-                message3 or
-                message4 or
-                message5 or
-                message6 or
-                message7).toUByte()
+        hash = computeHash(gene1, gene2)
     }
 
     override fun toString(): String {
@@ -36,9 +13,41 @@ class Genome(val genes: List<Gene>) {
             builder.append(Gene.toBitString(gene.gene) + " " + gene )
             builder.append("\n")
         }
-        builder.append(Gene.toBitString(hash.third.toUInt() or (hash.second.toUInt() shl 8) or (hash.first.toUInt() shl 16 )))
+        builder.append(Gene.toBitString(hash.toUInt()))
         return builder.toString()
     }
 
-
+    companion object {
+        fun computeHash(gene1: Gene, gene2: Gene): UByte {
+            val message0 = Bitwise.booleanToBit(gene1.sourceInternal())
+            val message1 = Bitwise.booleanToBit(gene2.sourceInternal()) shl 1
+            val message2 = Bitwise.significantBit(gene1.sourceId().toUInt(), 6) shl 2
+            val message3 = Bitwise.significantBit(gene2.sourceId().toUInt(), 6) shl 3
+            val message4 = Bitwise.booleanToBit(gene1.sinkInternal()) shl 4
+            val message5 = Bitwise.booleanToBit(gene2.sinkInternal()) shl 5
+            val message6 = Bitwise.significantBit(gene1.sinkId().toUInt(), 6) shl 6
+            val message7 = Bitwise.significantBit(gene2.sinkId().toUInt(), 6) shl 7
+            println(
+                "" +
+                        message0 + " " +
+                        message1 + " " +
+                        message2 + " " +
+                        message3 + " " +
+                        message4 + " " +
+                        message5 + " " +
+                        message6 + " " +
+                        message7 + " "
+            )
+            return Bitwise.orTogether(
+                message0,
+                message1,
+                message2,
+                message3,
+                message4,
+                message5,
+                message6,
+                message7,
+            ).toUByte()
+        }
+    }
 }

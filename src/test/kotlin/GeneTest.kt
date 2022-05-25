@@ -50,8 +50,8 @@ internal class GeneTest : FunSpec({
 
     context("Testing weight works") {
         withData(
-            tuple(0xFFFF7FFF.toUInt(), 32767),
-            tuple(0xFFFE8000.toUInt(), -32768),
+            tuple(0xFFFF7FFF.toUInt(), 3.9998779296875),
+            tuple(0xFFFE8000.toUInt(), -4.0),
             tuple(0xFF000000.toUInt(), 0),
         ) { (geneNumber, expected) ->
             Gene(geneNumber).weight() shouldBe expected
