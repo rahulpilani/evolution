@@ -16,7 +16,7 @@ internal class GeneTest : FunSpec({
             tuple(0x70000000.toUInt(), false),
             tuple(0x60000000.toUInt(), false),
         ) { (geneNumber, expected) ->
-            Gene(geneNumber).sourceInternal() shouldBe expected
+            Gene(geneNumber).sourceType() shouldBe expected
         }
     }
 
@@ -34,7 +34,7 @@ internal class GeneTest : FunSpec({
             tuple(0xFFFF0000.toUInt(), true),
             tuple(0x00000000.toUInt(), false),
         ) { (geneNumber, expected) ->
-            Gene(geneNumber).sinkInternal() shouldBe expected
+            Gene(geneNumber).sinkType() shouldBe expected
         }
     }
 
