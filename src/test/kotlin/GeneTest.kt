@@ -7,14 +7,14 @@ internal class GeneTest : FunSpec({
 
     context("Testing source flag works") {
         withData(
-            tuple(0x80000000.toUInt(), true),
-            tuple(0x90000000.toUInt(), true),
-            tuple(0xA0000000.toUInt(), true),
-            tuple(0xB0000000.toUInt(), true),
-            tuple(0xC0000000.toUInt(), true),
-            tuple(0x00000000.toUInt(), false),
-            tuple(0x70000000.toUInt(), false),
-            tuple(0x60000000.toUInt(), false),
+            tuple(0x80000000.toUInt(), 1u),
+            tuple(0x90000000.toUInt(), 1u),
+            tuple(0xA0000000.toUInt(), 1u),
+            tuple(0xB0000000.toUInt(), 1u),
+            tuple(0xC0000000.toUInt(), 1u),
+            tuple(0x00000000.toUInt(), 0u),
+            tuple(0x70000000.toUInt(), 0u),
+            tuple(0x60000000.toUInt(), 0u),
         ) { (geneNumber, expected) ->
             Gene(geneNumber).sourceType() shouldBe expected
         }
@@ -31,8 +31,8 @@ internal class GeneTest : FunSpec({
 
     context("Testing sink flag works") {
         withData(
-            tuple(0xFFFF0000.toUInt(), true),
-            tuple(0x00000000.toUInt(), false),
+            tuple(0xFFFF0000.toUInt(), 1u),
+            tuple(0x00000000.toUInt(), 0u),
         ) { (geneNumber, expected) ->
             Gene(geneNumber).sinkType() shouldBe expected
         }

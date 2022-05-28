@@ -17,14 +17,22 @@ class Genome(val genes: List<Gene>) {
         return builder.toString()
     }
 
+
     companion object {
+        fun randomGenes(geneCount: Int): List<Gene> {
+            val genes = mutableListOf<Gene>()
+            for (i in 0 until geneCount) {
+                genes.add(Gene.randomGene())
+            }
+            return genes
+        }
         fun computeHash(gene1: Gene, gene2: Gene): UByte {
-            val message0 = Bitwise.booleanToBit(gene1.sourceType())
-            val message1 = Bitwise.booleanToBit(gene2.sourceType()) shl 1
+            val message0 = gene1.sourceType()
+            val message1 = gene2.sourceType() shl 1
             val message2 = Bitwise.significantBit(gene1.sourceId().toUInt(), 6) shl 2
             val message3 = Bitwise.significantBit(gene2.sourceId().toUInt(), 6) shl 3
-            val message4 = Bitwise.booleanToBit(gene1.sinkType()) shl 4
-            val message5 = Bitwise.booleanToBit(gene2.sinkType()) shl 5
+            val message4 = gene1.sinkType() shl 4
+            val message5 = gene2.sinkType() shl 5
             val message6 = Bitwise.significantBit(gene1.sinkId().toUInt(), 6) shl 6
             val message7 = Bitwise.significantBit(gene2.sinkId().toUInt(), 6) shl 7
             println(

@@ -28,17 +28,17 @@ fun main() {
     val gene2 = Gene.randomGene()
     println("gene1    " + Gene.toBitString(gene1.gene))
     println("gene2    " + Gene.toBitString(gene2.gene))
-    val message0 = Bitwise.booleanToBit(gene1.sourceType())
+    val message0 = gene1.sourceType()
     println("message0 " + Gene.toBitString(message0.toUInt()))
-    val message1 = Bitwise.booleanToBit(gene2.sourceType()) shl 1
+    val message1 = gene2.sourceType() shl 1
     println("message1 " + Gene.toBitString(message1.toUInt()))
     val message2 = Bitwise.significantBit(gene1.sourceId().toUInt(), 6) shl 2
     println("message2 " + Gene.toBitString(message2.toUInt()))
     val message3 = Bitwise.significantBit(gene2.sourceId().toUInt(), 6) shl 3
     println("message3 " + Gene.toBitString(message3.toUInt()))
-    val message4 = Bitwise.booleanToBit(gene1.sinkType()) shl 4
+    val message4 = gene1.sinkType() shl 4
     println("message4 " + Gene.toBitString(message4.toUInt()))
-    val message5 = Bitwise.booleanToBit(gene2.sinkType()) shl 5
+    val message5 = gene2.sinkType() shl 5
     println("message5 " + Gene.toBitString(message5.toUInt()))
     val message6 = Bitwise.significantBit(gene1.sinkId().toUInt(), 6) shl 6
     println("message6 " + Gene.toBitString(message6.toUInt()))

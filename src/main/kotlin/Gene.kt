@@ -35,19 +35,19 @@ class Gene(val gene: UInt) {
     }
 
     fun sourceType(): UInt {
-        return gene and 0x80000000.toUInt()
+        return (gene and 0x80000000.toUInt()) shr 31
     }
 
     fun sinkType(): UInt {
-        return gene and 0x00800000.toUInt()
+        return (gene and 0x00800000.toUInt()) shr 23
     }
 
-    fun sourceTypeAsEnum(): Neuron.Type {
-        return Neuron.Type.getByValue(this.sourceType().toInt())!!
+    fun sourceTypeAsEnum(): Brain.NeuronCategory {
+        return Brain.NeuronCategory.getByValue(this.sourceType().toInt())!!
     }
 
-    fun sinkTypeAsEnum(): Neuron.Type {
-        return Neuron.Type.getByValue(this.sinkType().toInt())!!
+    fun sinkTypeAsEnum(): Brain.NeuronCategory {
+        return Brain.NeuronCategory.getByValue(this.sinkType().toInt())!!
     }
 
     fun sourceId(): Int {
@@ -58,8 +58,8 @@ class Gene(val gene: UInt) {
         return (gene and 0x007F0000.toUInt() shr 16).toInt()
     }
 
-    fun weight(): Double {
-        return (gene and 0x0000FFFF.toUInt()).toShort().toDouble() / 8192.0
+    fun weight(): Float {
+        return ((gene and 0x0000FFFF.toUInt()).toShort().toDouble() / 8192.0).toFloat()
     }
 
     override fun toString(): String {
