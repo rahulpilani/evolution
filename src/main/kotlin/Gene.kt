@@ -42,12 +42,12 @@ class Gene(val gene: UInt) {
         return (gene and 0x00800000.toUInt()) shr 23
     }
 
-    fun sourceTypeAsEnum(): Brain.NeuronCategory {
-        return Brain.NeuronCategory.getByValue(this.sourceType().toInt())!!
+    fun sourceTypeAsEnum(): Neuron.Category {
+        return Neuron.Category.getByValue(this.sourceType().toInt(), true)
     }
 
-    fun sinkTypeAsEnum(): Brain.NeuronCategory {
-        return Brain.NeuronCategory.getByValue(this.sinkType().toInt())!!
+    fun sinkTypeAsEnum(): Neuron.Category {
+        return Neuron.Category.getByValue(this.sinkType().toInt(), false)
     }
 
     fun sourceId(): Int {

@@ -1,10 +1,11 @@
 class Neuron(
     var id: Int,
-    val category: Brain.NeuronCategory,
+    val category: Category,
     val incomingEdges: MutableList<Neuron> = mutableListOf(),
     val outgoingEdges: MutableList<Pair<Float, Neuron>> = mutableListOf()
 ) {
     val initialOutput: Float = 0.5F
+    var output = initialOutput
 
     fun driven(): Boolean {
         return incomingEdges.size > 0 &&
@@ -13,8 +14,10 @@ class Neuron(
                 else true
     }
 
+    fun hasOutgoingConnectionTo(e: Neuron) = e.outgoingEdges.map { m -> m.second }.contains(e)
+
     fun addOutgoing(neuron: Neuron, weight: Float) {
-        if (!outgoingEdges.map { e -> e.second }.contains(neuron)) {
+        if (!hasOutgoingConnectionTo(neuron)) {
             outgoingEdges.add(Pair(weight, neuron))
             neuron.addIncoming(this)
         }
@@ -36,9 +39,7 @@ class Neuron(
     }
 
     override fun hashCode(): Int {
-        var result = id
-        result = 31 * result + category.hashCode()
-        return result
+        return id
     }
 
     override fun equals(other: Any?): Boolean {
@@ -48,7 +49,6 @@ class Neuron(
         other as Neuron
 
         if (id != other.id) return false
-        if (category != other.category) return false
 
         return true
     }
@@ -61,12 +61,23 @@ class Neuron(
         return "Neuron($id, $category, incomingEdges=${incomingEdges.map { v -> v.id }}, outgoingEdges=${outgoingEdges.map { v -> v.second.id }})"
     }
 
-    enum class NeuronType(val category: Brain.NeuronCategory) {
-        INTERNAL(Brain.NeuronCategory.INTERNAL),
-        SENSE_NORTH(Brain.NeuronCategory.ACTION),
-        SENSE_SOUTH(Brain.NeuronCategory.ACTION),
-        SENSE_EAST(Brain.NeuronCategory.ACTION),
-        SENSE_WEST(Brain.NeuronCategory.ACTION),
+    enum class Category {
+        SENSOR, ACTION, INTERNAL;
 
+        companion object {
+            fun getByValue(value: Int, source: Boolean): Category {
+                if (value == 1) {
+                    if (source) {
+                        return SENSOR
+                    } else {
+                        return ACTION
+                    }
+                } else {
+                    return INTERNAL
+                }
+            }
+        }
     }
+
+
 }
