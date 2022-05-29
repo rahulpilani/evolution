@@ -1,4 +1,10 @@
-class Creature(val position: Position, val genome: Genome, val world: World) {
+import kotlin.math.min
+
+fun interface SensorInputProvider {
+    fun getSensorInput(id: Int): Float
+}
+
+class Creature(val position: Position, val genome: Genome, val world: World): SensorInputProvider {
     var lastPosition: Position = position
     val sensorMap: Map<Int, () -> Float> = mapOf(
         Pair(0, this::xLocation),
@@ -8,8 +14,8 @@ class Creature(val position: Position, val genome: Genome, val world: World) {
         Pair(4, this::lastMoveX),
         Pair(5, this::lastMoveY),
     )
-    
-    val brain: Brain = Brain(this, genome, 6, sensorMap.size, 6)
+
+    val brain: Brain = Brain(this, GenomeToConnectionProvider(genome, 6, sensorMap.size, 6))
 
     companion object {
         fun randomCreature(position: Position, numberOfGenes: Int, world: World): Creature {
@@ -30,8 +36,8 @@ class Creature(val position: Position, val genome: Genome, val world: World) {
 
     }
 
-    fun getSensorInput(sensorId: Int): Float {
-        val sensor = sensorMap.get(sensorId)
+    override fun getSensorInput(id: Int): Float {
+        val sensor = sensorMap[id]
         return sensor?.invoke() ?: 0.0F
     }
 
@@ -54,17 +60,17 @@ class Creature(val position: Position, val genome: Genome, val world: World) {
     }
 
     private fun xDistanceToBoundary(): Float {
-        val minDistanceX = Math.min(position.x, world.maxX - position.x)
+        val minDistanceX = min(position.x, world.maxX - position.x)
         return (minDistanceX * 1.0F) / (world.maxX / 2.0F)
     }
 
     private fun yDistanceToBoundary(): Float {
-        val minDistanceY = Math.min(position.y, world.maxY - position.y)
+        val minDistanceY = min(position.y, world.maxY - position.y)
         return (minDistanceY * 1.0F) / (world.maxY / 2.0F)
     }
 
     private fun distanceToBoundary(): Float {
-        return Math.min(xDistanceToBoundary(), yDistanceToBoundary())
+        return min(xDistanceToBoundary(), yDistanceToBoundary())
     }
 
     private fun xLocation(): Float {
