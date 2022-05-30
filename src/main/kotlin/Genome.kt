@@ -35,17 +35,6 @@ class Genome(val genes: List<Gene>) {
             val message5 = gene2.sinkType() shl 5
             val message6 = Bitwise.significantBit(gene1.sinkId().toUInt(), 6) shl 6
             val message7 = Bitwise.significantBit(gene2.sinkId().toUInt(), 6) shl 7
-            println(
-                "" +
-                        message0 + " " +
-                        message1 + " " +
-                        message2 + " " +
-                        message3 + " " +
-                        message4 + " " +
-                        message5 + " " +
-                        message6 + " " +
-                        message7 + " "
-            )
             return Bitwise.orTogether(
                 message0,
                 message1,

@@ -8,7 +8,7 @@ class Brain(private val sensorInputProvider: SensorInputProvider, private val co
         return "Brain(connections=${connectionProvider.getConnections()})"
     }
 
-    fun step(): Map<Neuron, Float> {
+    fun step(): Map<Int, Float> {
         val connections = connectionProvider.getConnections()
         val internalMap = mutableMapOf<Neuron, Float>()
 
@@ -34,7 +34,7 @@ class Brain(private val sensorInputProvider: SensorInputProvider, private val co
         }
 
         //now calculate output of action neurons
-        val actionMap = mutableMapOf<Neuron, Float>()
+        val actionMap = mutableMapOf<Int, Float>()
         for (connection in connections) {
             if (connection.sink.category == Neuron.Category.ACTION) {
                 val input: Float = if (connection.source.category == Neuron.Category.SENSOR) {
@@ -43,7 +43,7 @@ class Brain(private val sensorInputProvider: SensorInputProvider, private val co
                     connection.source.output
                 }
                 val signal = input * connection.weight
-                actionMap[connection.sink] = actionMap.getOrDefault(connection.sink, 0.0F) + signal
+                actionMap[connection.sink.id] = actionMap.getOrDefault(connection.sink.id, 0.0F) + signal
             }
         }
         return actionMap
