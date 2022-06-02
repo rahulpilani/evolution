@@ -1,6 +1,6 @@
 import kotlin.random.Random
 
-class Gene(val gene: UInt) {
+class Gene(val gene: UInt): Comparable<Gene> {
     /*
     |Source: 1 bit| Source ID: 7 bits | Sink: 1 bit | Sink ID: 7 bits | Weight: 16 bits|
      */
@@ -64,6 +64,10 @@ class Gene(val gene: UInt) {
 
     override fun toString(): String {
         return "" + sourceType() + ", " + sourceId() + ", " + sinkType() + ", " + sinkId() + ", " + weight()
+    }
+
+    override fun compareTo(other: Gene): Int {
+        return this.gene.compareTo(other.gene)
     }
 
 

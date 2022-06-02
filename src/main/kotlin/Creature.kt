@@ -1,5 +1,7 @@
+import java.lang.Math.pow
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.math.sqrt
 import kotlin.math.tanh
 import kotlin.random.Random
 
@@ -12,11 +14,13 @@ class Creature(var position: Position, val genome: Genome, val world: World): Se
     val sensorMap: List<() -> Float> = listOf(
         this::xLocation,
         this::yLocation,
-        this::xDistanceToBoundary,
-        this::yDistanceToBoundary,
+//        this::xDistanceToBoundary,
+//        this::yDistanceToBoundary,
         this::xDistanceToCenter,
         this::yDistanceToCenter,
         this::distanceToBoundary,
+        this::distanceToCenter,
+        this::distanceToCorner,
         this::lastMoveX,
         this::lastMoveY,
     )
@@ -40,7 +44,7 @@ class Creature(var position: Position, val genome: Genome, val world: World): Se
     }
 
 
-    val brain: Brain = Brain(this, GenomeToConnectionProvider(genome, 3, sensorMap.size, Actions.values().size))
+    val brain: Brain = Brain(this, GenomeToConnectionProvider(genome, 4, sensorMap.size, Actions.values().size))
 
     companion object {
         fun randomCreature(position: Position, numberOfGenes: Int, world: World): Creature {
@@ -97,18 +101,18 @@ class Creature(var position: Position, val genome: Genome, val world: World): Se
 
     private fun lastMoveX(): Float {
         val x = position.x - lastPosition.x
-        return when {
-            x > 0 -> 1.0F
-            x < 0 -> 0.0F
-            else -> 0.5F
-        }
+        return delta(x)
     }
 
     private fun lastMoveY(): Float {
         val y = position.y - lastPosition.y
+        return delta(y)
+    }
+
+    private fun delta(delta: Int): Float {
         return when {
-            y > 0 -> 1.0F
-            y < 0 -> 0.0F
+            delta > 0 -> 1.0F
+            delta < 0 -> 0.0F
             else -> 0.5F
         }
     }
@@ -131,6 +135,17 @@ class Creature(var position: Position, val genome: Genome, val world: World): Se
     private fun yDistanceToCenter(): Float {
         val distanceY = (world.maxY / 2) - position.y
         return distanceY * 1.0F / (world.maxY / 2.0F)
+    }
+
+    private fun distanceToCenter(): Float {
+        val distanceY = (world.maxY / 2) - position.y
+        val distanceX = (world.maxX / 2) - position.x
+        return (sqrt( pow(distanceY.toDouble(), 2.0) + pow(distanceX.toDouble(), 2.0)) / world.maxY / 2.0).toFloat()
+    }
+
+    private fun distanceToCorner(): Float {
+        val distance = World.distanceToCorner(position, world.maxX, world.maxY)
+        return (sqrt( 2.0).toFloat() / 2.0F) * distance.toFloat()
     }
 
     private fun distanceToBoundary(): Float {

@@ -7,6 +7,10 @@ import javax.swing.Timer
 
 
 class Display(title: String, private val maxX: Int, private val maxY: Int, population: Int) : JFrame() {
+    enum class Config {
+        MAX_X, MAX_Y, POPULATION, GENOME_LENGTH, INTERNAL_NEURONS, STEPS_PER_GEN, GEN_PER_ITER
+    }
+
     val world = World(maxY, maxX, population)
     private var creaturePanel: CreaturePanel = CreaturePanel(world.creatures.values, maxX, maxY)
 
@@ -30,7 +34,9 @@ class Display(title: String, private val maxX: Int, private val maxY: Int, popul
 
     fun displayStep() {
         val maxSteps = 200
-        val timer = Timer(2, object : ActionListener {
+        var genStep = 1000
+        var currentGen = 0
+        val timer = Timer(60, object : ActionListener {
             var currentFrame = 0
             override fun actionPerformed(e: ActionEvent) {
                 world.step()
@@ -41,7 +47,16 @@ class Display(title: String, private val maxX: Int, private val maxY: Int, popul
                 repaint()
                 if (currentFrame < maxSteps) currentFrame++ else {
                     (e.source as Timer).stop()
-                    world.endOfThisGeneration()
+                    for (i in 0 until 9){
+                        var step = 0
+                        while (step < maxSteps) {
+                            world.step()
+                            step++
+                        }
+                        world.endOfThisGeneration()
+                        println(world.generation)
+                    }
+                    println((world.lastGenerationSurvivors.toDouble() * 100) / world.population)
                     EventQueue.invokeLater(this@Display::displayStep)
                 }
             }
@@ -61,7 +76,7 @@ class Display(title: String, private val maxX: Int, private val maxY: Int, popul
 
 private fun createAndShowGUI() {
 
-    val frame = Display("Evolution", 128, 128, 32 * 32)
+    val frame = Display("Evolution", 128, 128, 1000)
 
     frame.isVisible = true
 }
